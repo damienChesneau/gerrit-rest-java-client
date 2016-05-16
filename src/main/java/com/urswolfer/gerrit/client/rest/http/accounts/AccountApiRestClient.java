@@ -21,6 +21,7 @@ import com.google.gerrit.extensions.restapi.BinaryResult;
 import com.google.gerrit.extensions.restapi.RestApiException;
 import com.google.gerrit.extensions.restapi.Url;
 import com.google.gson.JsonElement;
+import com.urswolfer.gerrit.client.rest.RestClient;
 import com.urswolfer.gerrit.client.rest.accounts.AccountApi;
 import com.urswolfer.gerrit.client.rest.http.GerritRestClient;
 import com.urswolfer.gerrit.client.rest.http.util.BinaryResultUtils;
@@ -79,6 +80,62 @@ public class AccountApiRestClient extends AccountApi.NotImplemented implements A
             throw new RestApiException("Failed to get avatar.", e);
         }
     }
+
+    @Override
+    public BinaryResult updateName(String name) throws RestApiException {
+        String request = getRequestPath() + "/name";
+        try {
+            HttpResponse response = gerritRestClient.request(request, "{\"name\": \"" + name + "\"}\"", GerritRestClient.HttpVerb.PUT);
+            return BinaryResultUtils.createBinaryResult(response);
+        } catch (IOException e) {
+            throw new RestApiException("Failed to update name.", e);
+        }
+    }
+
+    @Override
+    public BinaryResult newPreferedEmail(String email) throws RestApiException {
+        String request = getRequestPath() + "/emails/" + email + "/preferred";
+        try {
+            HttpResponse response = gerritRestClient.request(request, null, GerritRestClient.HttpVerb.PUT);
+            return BinaryResultUtils.createBinaryResult(response);
+        } catch (IOException e) {
+            throw new RestApiException("Failed to update email.", e);
+        }
+    }
+
+    @Override
+    public BinaryResult newEmail(String email) throws RestApiException {
+        String request = getRequestPath() + "/emails/" + email;
+        try {
+            HttpResponse response = gerritRestClient.request(request, null, GerritRestClient.HttpVerb.PUT);
+            return null;
+        } catch (IOException e) {
+            throw new RestApiException("Failed to update email.", e);
+        }
+    }
+
+    @Override
+    public BinaryResult deleteEmail(String email) throws RestApiException {
+        String request = getRequestPath() + "/emails/" + email;
+        try {
+            gerritRestClient.request(request, null, GerritRestClient.HttpVerb.DELETE);
+            return null;
+        } catch (IOException e) {
+            throw new RestApiException("Failed to update email.", e);
+        }
+    }
+
+    @Override
+    public BinaryResult updateUserName(String newName) throws RestApiException {
+        String request = getRequestPath() + "/name";
+        try {
+            HttpResponse response = gerritRestClient.request(request, "{\"username\": \"" + newName + "\"}", GerritRestClient.HttpVerb.PUT);
+            return null;
+        } catch (IOException e) {
+            throw new RestApiException("Failed to update email.", e);
+        }
+    }
+
 
     private String getRequestPath() {
         return "/accounts/" + Url.encode(name);

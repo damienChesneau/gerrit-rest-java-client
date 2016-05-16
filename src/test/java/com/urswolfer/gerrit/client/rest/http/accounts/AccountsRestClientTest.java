@@ -16,8 +16,13 @@
 
 package com.urswolfer.gerrit.client.rest.http.accounts;
 
+import com.google.gerrit.extensions.api.GerritApi;
+import com.google.gerrit.extensions.client.EditPreferencesInfo;
 import com.google.gerrit.extensions.common.AccountInfo;
+import com.google.gerrit.extensions.restapi.RestApiException;
 import com.google.gson.JsonElement;
+import com.urswolfer.gerrit.client.rest.GerritAuthData;
+import com.urswolfer.gerrit.client.rest.GerritRestApiFactory;
 import com.urswolfer.gerrit.client.rest.http.GerritRestClient;
 import org.easymock.EasyMock;
 import org.testng.annotations.Test;
@@ -53,10 +58,10 @@ public class AccountsRestClientTest {
     @Test
     public void testStarChange() throws Exception {
         GerritRestClient gerritRestClient = gerritRestClientExpectPut(
-                "/accounts/jdoe/starred.changes/Iccf90a8284f8371a211db9a2824d0617e95a79f9");
+            "/accounts/jdoe/starred.changes/Iccf90a8284f8371a211db9a2824d0617e95a79f9");
         AccountsRestClient accountsRestClient = new AccountsRestClient(
-                gerritRestClient,
-                EasyMock.createMock(AccountsParser.class));
+            gerritRestClient,
+            EasyMock.createMock(AccountsParser.class));
 
         accountsRestClient.id("jdoe").starChange("Iccf90a8284f8371a211db9a2824d0617e95a79f9");
 
@@ -64,12 +69,31 @@ public class AccountsRestClientTest {
     }
 
     @Test
+    public void test() throws RestApiException {
+        GerritRestApiFactory gerritRestApiFactory = new GerritRestApiFactory();
+        GerritAuthData.Basic authData = new GerritAuthData.Basic("http://localhost", "admin", "secret");
+
+        GerritApi gerritApi = gerritRestApiFactory.create(authData);
+//        List<ChangeInfo> changes = gerritApi.changes().query("status:merged").withLimit(10).get();
+        AccountInfo accountInfo = gerritApi.accounts().self().get();
+        accountInfo.name = "Damien";
+        EditPreferencesInfo defaults = EditPreferencesInfo.defaults();
+
+        gerritApi.accounts().id(accountInfo._accountId).updateName("Damien Chesneau");
+        gerritApi.accounts().id(accountInfo._accountId).newEmail("damien.chesneau@nokia.com");
+        gerritApi.accounts().id(accountInfo._accountId).newPreferedEmail("damien.chesneau@nokia.com");
+        gerritApi.accounts().id(accountInfo._accountId).deleteEmail("admin@example.com");
+        gerritApi.projects().create("docker-gerrit", "Tests for customisation for gerrit.");
+        System.out.println(accountInfo.email);
+    }
+
+    @Test
     public void testUnStarChange() throws Exception {
         GerritRestClient gerritRestClient = gerritRestClientExpectDelete(
-                "/accounts/jdoe/starred.changes/Iccf90a8284f8371a211db9a2824d0617e95a79f9");
+            "/accounts/jdoe/starred.changes/Iccf90a8284f8371a211db9a2824d0617e95a79f9");
         AccountsRestClient accountsRestClient = new AccountsRestClient(
-                gerritRestClient,
-                EasyMock.createMock(AccountsParser.class));
+            gerritRestClient,
+            EasyMock.createMock(AccountsParser.class));
 
         accountsRestClient.id("jdoe").unstarChange("Iccf90a8284f8371a211db9a2824d0617e95a79f9");
 
@@ -79,10 +103,10 @@ public class AccountsRestClientTest {
     @Test
     public void testSuggestAccount() throws Exception {
         GerritRestClient gerritRestClient = gerritRestClientExpectGet(
-                "/accounts/?q=jdoe&n=5");
+            "/accounts/?q=jdoe&n=5");
         AccountsRestClient accountsRestClient = new AccountsRestClient(
-                gerritRestClient,
-                EasyMock.createMock(AccountsParser.class));
+            gerritRestClient,
+            EasyMock.createMock(AccountsParser.class));
 
         accountsRestClient.suggestAccounts("jdoe").withLimit(5).get();
 
@@ -116,7 +140,7 @@ public class AccountsRestClientTest {
     private AccountsParser getAccountsParser() throws Exception {
         AccountsParser accountsParser = EasyMock.createMock(AccountsParser.class);
         EasyMock.expect(accountsParser.parseAccountInfo(MOCK_JSON_ELEMENT))
-                .andReturn(MOCK_ACCOUNT_INFO).once();
+            .andReturn(MOCK_ACCOUNT_INFO).once();
         EasyMock.replay(accountsParser);
         return accountsParser;
     }

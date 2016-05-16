@@ -14,10 +14,20 @@
 
 package com.google.gerrit.extensions.api.projects;
 
+import com.google.common.base.Strings;
 import com.google.gerrit.extensions.restapi.DefaultInput;
 
 public class PutDescriptionInput {
   @DefaultInput
   public String description;
   public String commitMessage;
+
+  public PutDescriptionInput() {
+
+  }
+
+  public PutDescriptionInput(String description, String commitMessage) {
+    this.description = description;
+    this.commitMessage = commitMessage;
+  }
 }

@@ -20,6 +20,7 @@ import com.google.gerrit.extensions.client.GeneralPreferencesInfo;
 import com.google.gerrit.extensions.common.AccountInfo;
 import com.google.gerrit.extensions.common.GpgKeyInfo;
 import com.google.gerrit.extensions.common.SshKeyInfo;
+import com.google.gerrit.extensions.restapi.BinaryResult;
 import com.google.gerrit.extensions.restapi.NotImplementedException;
 import com.google.gerrit.extensions.restapi.RestApiException;
 
@@ -29,30 +30,48 @@ import java.util.Map;
 public interface AccountApi {
   AccountInfo get() throws RestApiException;
 
+  public BinaryResult updateName(String name) throws RestApiException;
+
+  public BinaryResult newPreferedEmail(String email) throws RestApiException;
+
+  public BinaryResult newEmail(String email) throws RestApiException;
+
+  public BinaryResult deleteEmail(String email) throws RestApiException;
+
+  public BinaryResult updateUserName(String newName) throws RestApiException;
+
   String getAvatarUrl(int size) throws RestApiException;
 
   GeneralPreferencesInfo getPreferences() throws RestApiException;
+
   GeneralPreferencesInfo setPreferences(GeneralPreferencesInfo in)
-      throws RestApiException;
+    throws RestApiException;
 
   DiffPreferencesInfo getDiffPreferences() throws RestApiException;
+
   DiffPreferencesInfo setDiffPreferences(DiffPreferencesInfo in)
-      throws RestApiException;
+    throws RestApiException;
 
   EditPreferencesInfo getEditPreferences() throws RestApiException;
+
   EditPreferencesInfo setEditPreferences(EditPreferencesInfo in)
-      throws RestApiException;
+    throws RestApiException;
 
   void starChange(String id) throws RestApiException;
+
   void unstarChange(String id) throws RestApiException;
+
   void addEmail(EmailInput input) throws RestApiException;
 
   List<SshKeyInfo> listSshKeys() throws RestApiException;
+
   SshKeyInfo addSshKey(String key) throws RestApiException;
 
   Map<String, GpgKeyInfo> listGpgKeys() throws RestApiException;
+
   Map<String, GpgKeyInfo> putGpgKeys(List<String> add, List<String> remove)
-      throws RestApiException;
+    throws RestApiException;
+
   GpgKeyApi gpgKey(String id) throws RestApiException;
 
   /**
@@ -77,7 +96,7 @@ public interface AccountApi {
 
     @Override
     public GeneralPreferencesInfo setPreferences(GeneralPreferencesInfo in)
-        throws RestApiException {
+      throws RestApiException {
       throw new NotImplementedException();
     }
 
@@ -88,7 +107,7 @@ public interface AccountApi {
 
     @Override
     public DiffPreferencesInfo setDiffPreferences(DiffPreferencesInfo in)
-        throws RestApiException {
+      throws RestApiException {
       throw new NotImplementedException();
     }
 
@@ -99,7 +118,7 @@ public interface AccountApi {
 
     @Override
     public EditPreferencesInfo setEditPreferences(EditPreferencesInfo in)
-        throws RestApiException {
+      throws RestApiException {
       throw new NotImplementedException();
     }
 
@@ -130,7 +149,7 @@ public interface AccountApi {
 
     @Override
     public Map<String, GpgKeyInfo> putGpgKeys(List<String> add,
-        List<String> remove) throws RestApiException {
+                                              List<String> remove) throws RestApiException {
       throw new NotImplementedException();
     }
 
@@ -143,5 +162,31 @@ public interface AccountApi {
     public Map<String, GpgKeyInfo> listGpgKeys() throws RestApiException {
       throw new NotImplementedException();
     }
+
+    @Override
+    public BinaryResult updateName(String name) throws RestApiException {
+      throw new NotImplementedException();
+    }
+
+    @Override
+    public BinaryResult newPreferedEmail(String email) throws RestApiException {
+      return null;
+    }
+
+    @Override
+    public BinaryResult newEmail(String email) throws RestApiException {
+      throw new NotImplementedException();
+    }
+
+    @Override
+    public BinaryResult deleteEmail(String email) throws RestApiException {
+      throw new NotImplementedException();
+    }
+
+    @Override
+    public BinaryResult updateUserName(String newName) throws RestApiException {
+      throw new NotImplementedException();
+    }
+
   }
 }

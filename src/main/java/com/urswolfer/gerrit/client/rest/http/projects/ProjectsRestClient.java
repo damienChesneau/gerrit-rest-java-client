@@ -100,6 +100,14 @@ public class ProjectsRestClient extends Projects.NotImplemented implements Proje
     }
 
     @Override
+    public ProjectApi create(String name, String description) throws RestApiException {
+        ProjectInput projectInput = new ProjectInput();
+        projectInput.name = name;
+        projectInput.description = description;
+        return create(projectInput);
+    }
+
+    @Override
     public ProjectApi create(ProjectInput in) throws RestApiException {
         if (in.name == null) {
             throw new IllegalArgumentException("Name must be set in project creation input.");

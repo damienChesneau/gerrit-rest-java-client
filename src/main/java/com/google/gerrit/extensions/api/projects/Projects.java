@@ -58,6 +58,8 @@ public interface Projects {
    */
   ProjectApi create(ProjectInput in) throws RestApiException;
 
+  ProjectApi create(String name, String description) throws RestApiException;
+
   ListRequest list();
 
   abstract class ListRequest {
@@ -87,7 +89,7 @@ public interface Projects {
     }
 
     public abstract SortedMap<String, ProjectInfo> getAsMap()
-        throws RestApiException;
+      throws RestApiException;
 
     public ListRequest withDescription(boolean description) {
       this.description = description;
@@ -183,6 +185,11 @@ public interface Projects {
 
     @Override
     public ProjectApi create(ProjectInput in) throws RestApiException {
+      throw new NotImplementedException();
+    }
+
+    @Override
+    public ProjectApi create(String name, String description) throws RestApiException {
       throw new NotImplementedException();
     }
 

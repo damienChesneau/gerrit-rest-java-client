@@ -17,7 +17,12 @@
 package com.urswolfer.gerrit.client.rest;
 
 import com.google.common.truth.Truth;
+import com.sun.security.ntlm.Client;
 import org.testng.annotations.Test;
+import sun.misc.BASE64Encoder;
+
+import static com.google.gson.reflect.TypeToken.get;
+import static com.sun.xml.internal.ws.api.message.Packet.State.ClientResponse;
 
 /**
  * @author Urs Wolfer
@@ -25,9 +30,10 @@ import org.testng.annotations.Test;
 public class GerritAuthDataTest {
     @Test
     public void basicAuth() throws Exception {
-        String host = "http://localhost:8080";
+        String host = "http://localhost";
         GerritAuthData.Basic authData = new GerritAuthData.Basic(host);
         Truth.assertThat(authData.getHost()).isEqualTo(host);
+        System.out.println(authData.getLogin());
         Truth.assertThat(authData.getLogin()).isEmpty();
         Truth.assertThat(authData.getPassword()).isEmpty();
         Truth.assertThat(authData.isLoginAndPasswordAvailable()).isFalse();
@@ -35,14 +41,15 @@ public class GerritAuthDataTest {
 
     @Test
     public void basicAuthWithUsernameAndPassword() throws Exception {
-        String host = "http://localhost:8080";
-        String user = "foo";
-        String password = "bar";
+        String host = "http://localhost";
+        String user = "admin";
+        String password = "secret";
         GerritAuthData.Basic authData = new GerritAuthData.Basic(host, user, password);
         Truth.assertThat(authData.getHost()).isEqualTo(host);
         Truth.assertThat(authData.getLogin()).isEqualTo(user);
         Truth.assertThat(authData.getPassword()).isEqualTo(password);
         Truth.assertThat(authData.isLoginAndPasswordAvailable()).isTrue();
+
     }
 
     @Test
